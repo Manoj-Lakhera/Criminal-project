@@ -79,12 +79,6 @@ class Main:
             self.adminTable.insert("", index=index, values=row)
             index += 1
     def deleteAdmin(self):
-        # self.name=self.txt1.get()
-        # q2=f"delete from admin where name='{self.name}'"
-        # self.cr.execute(q2)
-        # self.conn.commit()
-        # msg.showwarning("Warning", "Admin deleted successfully")
-
         row = self.adminTable.selection()
 
         if len(row) == 0:
