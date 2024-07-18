@@ -79,10 +79,29 @@ class Main:
             self.adminTable.insert("", index=index, values=row)
             index += 1
     def deleteAdmin(self):
-        self.name=self.txt1.get()
-        q2=f"delete from admin where name='{self.name}'"
-        self.cr.execute(q2)
-        self.conn.commit()
-        msg.showwarning("Warning", "Admin deleted successfully")
+        # self.name=self.txt1.get()
+        # q2=f"delete from admin where name='{self.name}'"
+        # self.cr.execute(q2)
+        # self.conn.commit()
+        # msg.showwarning("Warning", "Admin deleted successfully")
+
+        row = self.adminTable.selection()
+
+        if len(row) == 0:
+            msg.showwarning()
+        else:
+            row_id = row[0]
+            items = self.adminTable.item(row_id)
+            data = items["values"]
+            confirm= msg.askyesno("Do you want to delete the admin")
+
+            if confirm:
+                q = f"delete from admin where id='{data[0]}'"
+                self.cr.execute(q)
+                self.conn.commit()
+                msg.showinfo("Admin deleted")
+                self.refreshTable()
+            else:
+                msg.showinfo("Admin wasn't deleted")
 
 obj =Main()
