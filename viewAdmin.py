@@ -27,6 +27,8 @@ class Main:
         self.btn1.grid(row=0, column=2, pady=10, padx=10)
         self.btn2 = Button(self.searchFrame, text='Refresh', font=('Arial', 14), command=self.refreshTable)
         self.btn2.grid(row=0, column=3, pady=10, padx=10)
+        self.btn3 = Button(self.searchFrame, text='Delete', font=('Arial', 14), command=self.deleteAdmin)
+        self.btn3.grid(row=0, column=4, pady=10, padx=10)
 
 
 
@@ -76,6 +78,11 @@ class Main:
         for row in result:
             self.adminTable.insert("", index=index, values=row)
             index += 1
-
+    def deleteAdmin(self):
+        self.name=self.txt1.get()
+        q2=f"delete from admin where name='{self.name}'"
+        self.cr.execute(q2)
+        self.conn.commit()
+        msg.showwarning("Warning", "Admin deleted successfully")
 
 obj =Main()
