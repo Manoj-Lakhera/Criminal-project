@@ -2,6 +2,7 @@ from tkinter import *
 import tkinter.messagebox as msg
 import tkinter.ttk as ttk
 from connection import Connect
+import updateAdmin
 
 class Main:
     def __init__(self):
@@ -15,6 +16,8 @@ class Main:
 
         self.mainLabel = Label(self.root, text='View admins',font=('Arial',28,'bold'))
         self.mainLabel.pack(pady=20)
+
+        
 
         self.searchFrame = Frame(self.root)
         self.searchFrame.pack(pady=20)
@@ -35,13 +38,16 @@ class Main:
         self.adminTable = ttk.Treeview(self.root, columns=['id','name', 'email','mobile','role'])
         self.adminTable.pack(expand=True, fill='both', padx=20, pady=20)
         
-        self.adminTable.heading('name', text="Name")
-        
+        self.adminTable.heading('id', text="ID")
+        self.adminTable.heading('name', text="Name")        
         self.adminTable.heading('email', text="Email")
         self.adminTable.heading('mobile', text="Mobile")
         self.adminTable.heading('role', text="Role")
         self.adminTable['show'] = 'headings'
         self.getValues()
+        
+        self.adminTable.bind('<Double-1>',self.updatewindow)
+
 
         style = ttk.Style()
         style.configure("Treeview", font=("Arial", 14), rowheight=40)
@@ -78,6 +84,7 @@ class Main:
         for row in result:
             self.adminTable.insert("", index=index, values=row)
             index += 1
+
     def deleteAdmin(self):
         row = self.adminTable.selection()
 
@@ -87,15 +94,24 @@ class Main:
             row_id = row[0]
             items = self.adminTable.item(row_id)
             data = items["values"]
-            confirm= msg.askyesno("Do you want to delete the admin")
+            confirm= msg.askyesno("Warning","Do you want to delete the admin",parent=self.root)
 
             if confirm:
                 q = f"delete from admin where id='{data[0]}'"
                 self.cr.execute(q)
                 self.conn.commit()
-                msg.showinfo("Admin deleted")
+                msg.showinfo("Done","Admin deleted",parent=self.root)
                 self.refreshTable()
             else:
-                msg.showinfo("Admin wasn't deleted")
+                msg.showinfo("Bye","Admin wasn't deleted",parent=self.root)
+
+    def updatewindow(self,e):
+        row = self.adminTable.selection()
+        row_id = row[0]
+        items = self.adminTable.item(row_id)
+        data = items["values"]
+        updateAdmin.Main(data)
+ 
+
 
 obj =Main()
